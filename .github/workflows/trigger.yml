@@ -1,0 +1,23 @@
+name: Trigger Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run a script
+        run: echo "This is the trigger workflow"
+
+      - name: Trigger target workflow
+        if: success()
+        run: |
+          curl -X POST \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/vishnuavm5/gh-first-action/dispatches \
+            -d '{"event_type":"trigger-event","client_payload":{"customField":"customValue"}}'
